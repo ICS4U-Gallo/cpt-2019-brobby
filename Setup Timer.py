@@ -55,8 +55,10 @@ class MyGame(arcade.Window):
         arcade.draw_text(f"Set Your Time That You Want To Sleep At Below:", 
                                         15, start_y + 15, arcade.color.BLUEBERRY, 12.5, width=start_x + width, align="center", font_name='Ariel')
         arcade.draw_lrtb_rectangle_outline(start_x, start_x + width,
-                                           start_y - 100, start_y,
-                                           arcade.color.BLUEBERRY, 1)
+                                            start_y - 50, start_y - 100,
+                                            arcade.color.BLUEBERRY, 1)
+        set_time = "Set Your Time Here:"
+        arcade.draw_text(set_time, 15, start_y - 100, arcade.color.BLUEBERRY, 24, width = start_x + width, align="center", font_name="Ariel")
 
         # Call draw() on all your sprite lists below
 
