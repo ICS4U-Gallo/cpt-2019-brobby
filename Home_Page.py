@@ -26,7 +26,7 @@ friends_button = [280, 550, 120, 30, False, arcade.color.WHITE, arcade.color.ASH
 sticker_store_button = [0, 0, 200, 100, False, arcade.color.WHITE, arcade.color.ASH_GREY]
 
 
-class MyGame(arcade.Window):
+class Home_Page(arcade.Window):
     """
     Main application class.
 
@@ -218,7 +218,7 @@ class MyGame(arcade.Window):
 
 def main():
     """ Main method """
-    game = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    game = Home_Page(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     game.setup()
 
 

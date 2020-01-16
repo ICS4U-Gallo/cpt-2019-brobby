@@ -22,7 +22,7 @@ BTN_CLICKED_COLOR = 6
 sticker_button = [280, 550, 120, 30, False, arcade.color.WHITE, arcade.color.ASH_GREY]
 
 
-class MyGame(arcade.Window):
+class Sticker_Store(arcade.Window):
     """
     Main application class.
 
@@ -66,6 +66,8 @@ class MyGame(arcade.Window):
         start_x = 60
         arcade.draw_text("STICKER STORE",
                          start_x, start_y, arcade.color.BLUEBERRY, 30, width=300, align="center", font_name='Ariel')
+
+        self.stickers_list.draw()
 
     def on_update(self, delta_time):
 
@@ -117,14 +119,18 @@ class MyGame(arcade.Window):
 
         heart_button[BTN_IS_CLICKED] = False
 
-        smiley_store_button[BTN_IS_CLICKED] = False
+        smiley_button[BTN_IS_CLICKED] = False
+
+        sleeping_button[BTN_IS_CLICKED] = False
 
     def setup(self):
         # Create your sprites and sprite lists here
-        self.heart_sprite = arcade.Sprite(":resources:images/heart.png", SPRITE_SCALING_PLAYER)
+        self.stickers_list = arcade.SpriteList()
+
+        self.heart_sprite = arcade.Sprite("images/heart.png", SPRITE_SCALING_PLAYER)
         self.heart_sprite.center_x = 50
         self.heart_sprite.center_y = 50
-        self.sticker_list.append(self.heart_sprite)
+        self.stickers_list.append(self.heart_sprite)
 
         # Override arcade window methods
         window = arcade.get_window()
@@ -136,9 +142,10 @@ class MyGame(arcade.Window):
 
         arcade.run()
 
+
 def main():
     """ Main method """
-    game = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    game = Sticker_Store(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     game.setup()
 
 
