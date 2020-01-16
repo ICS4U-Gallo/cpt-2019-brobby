@@ -46,8 +46,6 @@ class MyGame(arcade.Window):
         # If you have sprite lists, you should create them here,
         # and set them to None
 
-
-
     def on_draw(self):
         """
         Render the screen.
