@@ -1,10 +1,14 @@
 import arcade
 
+
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Home Page"
+SCREEN_TITLE = "Set Timer Page"
 
-
+BTN_x = 15
+BTN_y = 365
+BTN_width = 375
+BTN_press = False
 
 class MyGame(arcade.Window):
     """
@@ -52,22 +56,15 @@ class MyGame(arcade.Window):
         arcade.draw_lrtb_rectangle_outline(start_x, start_x + width,
                                            start_y + height, start_y,
                                            arcade.color.BLUEBERRY, 1)
-        arcade.draw_text("Set Your Time That You Want To Sleep At Below:", 
+        arcade.draw_text("Set Your Time That You Want To Sleep Below:", 
                                         15, start_y + 15, arcade.color.BLUEBERRY, 12.5, width=start_x + width, align="center", font_name='Ariel')
         arcade.draw_lrtb_rectangle_outline(start_x, start_x + width,
                                             start_y - 50, start_y - 100,
                                             arcade.color.BLUEBERRY, 1)
-        set_time = "Set Your Time Here:"
-        BTN_x = 15
-        BTN_y = 365
-        BTN_width = 375
-        arcade.draw_text(set_time, BTN_x, BTN_y, arcade.color.BLUEBERRY, 24, BTN_width, align="center", font_name="Ariel")
-        
-
 
         # Call draw() on all your sprite lists below
 
-    
+
 
     def on_update(self, delta_time):
 
@@ -103,15 +100,11 @@ class MyGame(arcade.Window):
         """
         Called when the user presses a mouse button.
         """
-        BTN_x = 15
-        BTN_y = 365
-        BTN_width = 375
-        BTN_press = False
+        
         if (x > BTN_x and x < BTN_width and y > BTN_y and y < 425):
             BTN_press = True
-            
-            
-            
+            set_time = int(input("Enter a time:"))
+
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """
