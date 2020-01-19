@@ -1,10 +1,10 @@
-import arcade, time
-from typing import List
-from datetime import datetime
+import arcade
 
-SCREEN_WIDTH = 400
+SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Home Page"
+
+SPRITE_SCALING_PLAYER = 0.07
 
 hour_time_input = 23
 minutes_time_input = 10
@@ -13,20 +13,10 @@ set_time = f"{hour_time_input}:{minutes_time_input}"
 
 points = 0
 
-#buttons
-BTN_X = 0
-BTN_Y = 1
-BTN_WIDTH = 2
-BTN_HEIGHT = 3
-BTN_IS_CLICKED = 4
-BTN_COLOR = 5
-BTN_CLICKED_COLOR = 6
-
-friends_button = [280, 550, 120, 30, False, arcade.color.WHITE, arcade.color.ASH_GREY]
-sticker_store_button = [0, 0, 200, 100, False, arcade.color.WHITE, arcade.color.ASH_GREY]
+days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
 
 
-class Home_Page(arcade.Window):
+class HomePage(arcade.Window):
     """
     Main application class.
 
@@ -39,6 +29,8 @@ class Home_Page(arcade.Window):
         super().__init__(width, height, title)
 
         arcade.set_background_color(arcade.color.BLACK)
+
+        self.button_list = None
 
         self.text_angle = 0
         self.time_elapsed = 0.0
@@ -55,22 +47,10 @@ class Home_Page(arcade.Window):
         # the screen to the background color, and erase what we drew last frame.
         arcade.start_render()
 
-        start_y = 400
-        start_x = 40
-        days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+        for button in self.button_list:
+            button.draw()
 
-        for i in range(6):
-            arcade.draw_text(f"{days[i]}",
-                             start_x, start_y, arcade.color.BLUEBERRY, 20, width=200, align="center", font_name='Ariel')
-
-            arcade.draw_circle_outline(start_x + 220, start_y + 12, 14, arcade.color.WHITE, 2)
-
-            start_y -= 50
-
-        # def day_list(days: List[int], x: int) -> int:
-        #     if x == len(days):
-        #         return 0
-        #     return days[x] + day_list(days, x + 1)
+        self.day(0, 400)
 
         start_y = 525
         start_x = 100
@@ -80,76 +60,20 @@ class Home_Page(arcade.Window):
         start_y = 480
         start_x = 100
 
-        # arcade.draw_lrtb_rectangle_outline(start_x, start_x + width,
-        #                                    start_y + height, start_y,
-        #                                    arcade.color.BLUEBERRY, 1)
         arcade.draw_text(f"{set_time}",
                          start_x, start_y, arcade.color.BLUEBERRY, 30, width=200, align="center", font_name='Ariel')
 
         start_y = 50
-        start_x = 240
+        start_x = 175
 
         arcade.draw_text("POINTS",
                          start_x, start_y, arcade.color.BLUEBERRY, 18, width=200, align="center", font_name='Ariel')
 
         start_y = 20
-        start_x = 240
+        start_x = 175
 
         arcade.draw_text(f"{points}",
                          start_x, start_y, arcade.color.BLUEBERRY, 18, width=200, align="center", font_name='Ariel')
-
-        if friends_button[BTN_IS_CLICKED]:
-            color = friends_button[BTN_CLICKED_COLOR]
-        else:
-            color = friends_button[BTN_COLOR]
-
-            # Draw friend_button
-        arcade.draw_xywh_rectangle_filled(friends_button[BTN_X],
-                                          friends_button[BTN_Y],
-                                          friends_button[BTN_WIDTH],
-                                          friends_button[BTN_HEIGHT],
-                                          color)
-        start_y = 555
-        start_x = 265
-
-        arcade.draw_text("FRIENDS",
-                         start_x, start_y, arcade.color.BLUEBERRY, 16, width=150, align="center", font_name='Ariel')
-
-        if sticker_store_button[BTN_IS_CLICKED]:
-            color = sticker_store_button[BTN_CLICKED_COLOR]
-        else:
-            color = sticker_store_button[BTN_COLOR]
-
-            # Draw friend_button
-        arcade.draw_xywh_rectangle_filled(sticker_store_button[BTN_X],
-                                          sticker_store_button[BTN_Y],
-                                          sticker_store_button[BTN_WIDTH],
-                                          sticker_store_button[BTN_HEIGHT],
-                                          color)
-
-        start_y = 60
-        start_x = 0
-
-        arcade.draw_text("STICKER STORE",
-                         start_x, start_y, arcade.color.BLUEBERRY, 16, width=200, align="center", font_name='Ariel')
-
-
-        # start_y = 425
-        # start_x = 100
-        #
-        # # hours
-        # total_seconds = hour_time_input * 60 * 60 + minutes_time_input * 60
-        # current = dattime.now()
-        # difference_seconds = total_seconds - current
-        #
-        # # hours_left = difference_seconds // 3600
-        # # minutes_left = hours_left // 60
-        #
-        # arcade.draw_text(f"{int(difference_seconds)}",
-        #                  start_x, start_y, arcade.color.BLUEBERRY, 30, width=200, align="center", font_name='Ariel')
-
-        # Call draw() on all your sprite lists below
-
 
     def on_update(self, delta_time):
 
@@ -186,25 +110,31 @@ class Home_Page(arcade.Window):
         """
         Called when the user presses a mouse button.
         """
-        if (x > friends_button[BTN_X] and x < friends_button[BTN_X] + friends_button[BTN_WIDTH] and
-                y > friends_button[BTN_Y] and y < friends_button[BTN_Y] + friends_button[BTN_HEIGHT]):
-            friends_button[BTN_IS_CLICKED] = True
-
-        if (x > sticker_store_button[BTN_X] and x < sticker_store_button[BTN_X] + sticker_store_button[BTN_WIDTH] and
-                y > sticker_store_button[BTN_Y] and y < sticker_store_button[BTN_Y] + sticker_store_button[BTN_HEIGHT]):
-            sticker_store_button[BTN_IS_CLICKED] = True
+        check_mouse_press_for_buttons(x, y, self.button_list)
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """
         Called when a user releases a mouse button.
         """
 
-        friends_button[BTN_IS_CLICKED] = False
-
-        sticker_store_button[BTN_IS_CLICKED] = False
+        check_mouse_release_for_buttons(x, y, self.button_list, )
 
     def setup(self):
         # Create your sprites and sprite lists here
+        self.button_list = []
+
+        sticker_store_button = self.StickerStoreButton(100, 60)
+        self.button_list.append(sticker_store_button)
+
+        start_y = 410
+        for row in range(6):
+            yes_button = self.YesButton(375, start_y, check())
+            self.button_list.append(yes_button)
+
+            no_button = self.NoButton(500, start_y, x_mark())
+            self.button_list.append(no_button)
+
+            start_y -= 50
 
         # Override arcade window methods
         window = arcade.get_window()
@@ -216,9 +146,168 @@ class Home_Page(arcade.Window):
 
         arcade.run()
 
+    def day(self, num, start_y):
+        if num == 6:
+            return 1
+
+        arcade.draw_text(f"{days[num]}", 40, start_y, arcade.color.BLUEBERRY, 20, width=200, align="center",
+                         font_name='Ariel')
+
+        arcade.draw_circle_outline(260, start_y + 12, 14, arcade.color.WHITE, 2)
+
+        return self.day(num + 1, start_y - 50)
+
+
+
+    class TextButton:
+        """ Text-based button """
+
+        def __init__(self,
+                     center_x, center_y,
+                     width, height,
+                     text,
+                     font_size=18,
+                     font_face="Arial",
+                     face_color=arcade.color.LIGHT_GRAY,
+                     highlight_color=arcade.color.WHITE,
+                     shadow_color=arcade.color.GRAY,
+                     button_height=2):
+            self.center_x = center_x
+            self.center_y = center_y
+            self.width = width
+            self.height = height
+            self.text = text
+            self.font_size = font_size
+            self.font_face = font_face
+            self.pressed = False
+            self.face_color = face_color
+            self.highlight_color = highlight_color
+            self.shadow_color = shadow_color
+            self.button_height = button_height
+
+            self.check_sprite = None
+            self.x_sprite = None
+
+        def draw(self):
+            """ Draw the button """
+            arcade.draw_rectangle_filled(self.center_x, self.center_y, self.width,
+                                         self.height, self.face_color)
+
+            if not self.pressed:
+                color = self.shadow_color
+            else:
+                color = self.highlight_color
+
+            # Bottom horizontal
+            arcade.draw_line(self.center_x - self.width / 2, self.center_y - self.height / 2,
+                             self.center_x + self.width / 2, self.center_y - self.height / 2,
+                             color, self.button_height)
+
+            # Right vertical
+            arcade.draw_line(self.center_x + self.width / 2, self.center_y - self.height / 2,
+                             self.center_x + self.width / 2, self.center_y + self.height / 2,
+                             color, self.button_height)
+
+            if not self.pressed:
+                color = self.highlight_color
+            else:
+                color = self.shadow_color
+
+            # Top horizontal
+            arcade.draw_line(self.center_x - self.width / 2, self.center_y + self.height / 2,
+                             self.center_x + self.width / 2, self.center_y + self.height / 2,
+                             color, self.button_height)
+
+            # Left vertical
+            arcade.draw_line(self.center_x - self.width / 2, self.center_y - self.height / 2,
+                             self.center_x - self.width / 2, self.center_y + self.height / 2,
+                             color, self.button_height)
+
+            x = self.center_x
+            y = self.center_y
+            if not self.pressed:
+                x -= self.button_height
+                y += self.button_height
+
+            arcade.draw_text(self.text, x, y,
+                             arcade.color.BLACK, font_size=self.font_size,
+                             width=self.width, align="center",
+                             anchor_x="center", anchor_y="center")
+
+
+        def on_press(self):
+            self.pressed = True
+
+        def on_release(self):
+            self.pressed = False
+
+    class StickerStoreButton(TextButton):
+        def __init__(self, center_x, center_y):
+            super().__init__(center_x, center_y, 150, 75, "Sticker Store!", 18, "Ariel")
+
+        def on_release(self):
+            super().on_release()
+
+    class YesButton(TextButton):
+        def __init__(self, center_x, center_y, action):
+            super().__init__(center_x, center_y, 100, 30, "Yes", 18, "Ariel")
+            self.action = action
+
+        def on_release(self):
+            super().on_release()
+            if self.pressed:
+                check()
+
+    class NoButton(TextButton):
+        def __init__(self, center_x, center_y, action):
+            super().__init__(center_x, center_y, 100, 30, "No", 18, "Ariel")
+            self.action = action
+
+        def on_release(self):
+            super().on_release()
+            if self.pressed:
+                x_mark()
+
+
+def check_mouse_press_for_buttons(x, y, button_list):
+    """ Given an x, y, see if we need to register any button clicks. """
+    for button in button_list:
+        if x > button.center_x + button.width / 2:
+            continue
+        if x < button.center_x - button.width / 2:
+            continue
+        if y > button.center_y + button.height / 2:
+            continue
+        if y < button.center_y - button.height / 2:
+            continue
+        button.on_press()
+
+
+def check_mouse_release_for_buttons(_x, _y, button_list):
+    """ If a mouse button has been released, see if we need to process
+        any release events. """
+    for button in button_list:
+        if button.pressed:
+            button.on_release()
+
+
+def check():
+    check_sprite = arcade.Sprite("images/check.png", SPRITE_SCALING_PLAYER)
+    check_sprite.center_x = 260
+    check_sprite.center_y = 400
+    check_sprite.draw()
+
+
+def x_mark():
+    x_sprite = arcade.Sprite("images/x.png", SPRITE_SCALING_PLAYER)
+    x_sprite.center_x = 260
+    x_sprite.center_y = 400
+    x_sprite.draw()
+
+
 def main():
     """ Main method """
-    game = Home_Page(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    game = HomePage(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     game.setup()
 
 
