@@ -3,7 +3,7 @@ import arcade
 
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Set Timer Page"
+SCREEN_TITLE = "Set TImer Page"
 
 BTN_x = 15
 BTN_y = 365
@@ -103,7 +103,9 @@ class MyGame(arcade.Window):
         
         if (x > BTN_x and x < BTN_width and y > BTN_y and y < 425):
             BTN_press = True
-            set_time = int(input("Enter a time:"))
+        
+        if BTN_press == True:
+            time = int(input("Set a time to sleep:"))
 
 
     def on_mouse_release(self, x, y, button, key_modifiers):
