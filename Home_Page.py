@@ -31,6 +31,11 @@ class HomePage(arcade.Window):
         arcade.set_background_color(arcade.color.BLACK)
 
         self.button_list = None
+        self.yes_list = None
+        self.no_list = None
+
+        self.check_sprite = None
+        self.x_sprite = None
 
         self.text_angle = 0
         self.time_elapsed = 0.0
@@ -49,6 +54,16 @@ class HomePage(arcade.Window):
 
         for button in self.button_list:
             button.draw()
+
+        for button in self.yes_list:
+            button.draw()
+            # if button.pressed:
+            #     self.check().draw()
+
+        for button in self.no_list:
+            button.draw()
+            # if button.pressed:
+            #     self.x_mark().draw()
 
         self.day(0, 400)
 
@@ -75,6 +90,12 @@ class HomePage(arcade.Window):
         arcade.draw_text(f"{points}",
                          start_x, start_y, arcade.color.BLUEBERRY, 18, width=200, align="center", font_name='Ariel')
 
+        # if YesButton.pressed:
+        #     check_sprite = arcade.Sprite("images/check.png", SPRITE_SCALING_PLAYER)
+        #     check_sprite.center_x = 260
+        #     check_sprite.center_y = 400
+        #     check_sprite.draw()
+
     def on_update(self, delta_time):
 
         self.time_elapsed += delta_time
@@ -85,32 +106,13 @@ class HomePage(arcade.Window):
         need it.
         """
 
-    def on_key_press(self, key, key_modifiers):
-        """
-        Called whenever a key on the keyboard is pressed.
-
-        For a full list of keys, see:
-        http://arcade.academy/arcade.key.html
-        """
-        pass
-
-    def on_key_release(self, key, key_modifiers):
-        """
-        Called whenever the user lets off a previously pressed key.
-        """
-        pass
-
-    def on_mouse_motion(self, x, y, delta_x, delta_y):
-        """
-        Called whenever the mouse moves.
-        """
-        pass
-
     def on_mouse_press(self, x, y, button, key_modifiers):
         """
         Called when the user presses a mouse button.
         """
         check_mouse_press_for_buttons(x, y, self.button_list)
+        check_mouse_press_for_buttons(x, y, self.yes_list)
+        check_mouse_press_for_buttons(x, y, self.no_list)
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """
@@ -118,23 +120,37 @@ class HomePage(arcade.Window):
         """
 
         check_mouse_release_for_buttons(x, y, self.button_list, )
+        check_mouse_release_for_buttons(x, y, self.yes_list, )
+        check_mouse_release_for_buttons(x, y, self.no_list, )
 
     def setup(self):
         # Create your sprites and sprite lists here
         self.button_list = []
+        self.yes_list = []
+        self.no_list = []
 
         sticker_store_button = self.StickerStoreButton(100, 60)
         self.button_list.append(sticker_store_button)
 
         start_y = 410
         for row in range(6):
-            yes_button = self.YesButton(375, start_y, check())
-            self.button_list.append(yes_button)
+            yes_button = self.YesButton(375, start_y)
+            self.yes_list.append(yes_button)
 
-            no_button = self.NoButton(500, start_y, x_mark())
-            self.button_list.append(no_button)
+            no_button = self.NoButton(500, start_y)
+            self.no_list.append(no_button)
 
             start_y -= 50
+
+        self.check_sprite = arcade.Sprite("images/check.png", SPRITE_SCALING_PLAYER)
+        self.check_sprite.center_x = 260
+        self.check_sprite.center_y = 400
+        self.yes_list.append(self.check_sprite)
+
+        self.x_sprite = arcade.Sprite("images/x.png", SPRITE_SCALING_PLAYER)
+        self.x_sprite.center_x = 260
+        self.x_sprite.center_y = 400
+        self.no_list.append(self.x_sprite)
 
         # Override arcade window methods
         window = arcade.get_window()
@@ -156,8 +172,6 @@ class HomePage(arcade.Window):
         arcade.draw_circle_outline(260, start_y + 12, 14, arcade.color.WHITE, 2)
 
         return self.day(num + 1, start_y - 50)
-
-
 
     class TextButton:
         """ Text-based button """
@@ -234,7 +248,6 @@ class HomePage(arcade.Window):
                              width=self.width, align="center",
                              anchor_x="center", anchor_y="center")
 
-
         def on_press(self):
             self.pressed = True
 
@@ -249,24 +262,18 @@ class HomePage(arcade.Window):
             super().on_release()
 
     class YesButton(TextButton):
-        def __init__(self, center_x, center_y, action):
+        def __init__(self, center_x, center_y):
             super().__init__(center_x, center_y, 100, 30, "Yes", 18, "Ariel")
-            self.action = action
 
         def on_release(self):
             super().on_release()
-            if self.pressed:
-                check()
 
     class NoButton(TextButton):
-        def __init__(self, center_x, center_y, action):
+        def __init__(self, center_x, center_y):
             super().__init__(center_x, center_y, 100, 30, "No", 18, "Ariel")
-            self.action = action
 
         def on_release(self):
             super().on_release()
-            if self.pressed:
-                x_mark()
 
 
 def check_mouse_press_for_buttons(x, y, button_list):
@@ -289,20 +296,6 @@ def check_mouse_release_for_buttons(_x, _y, button_list):
     for button in button_list:
         if button.pressed:
             button.on_release()
-
-
-def check():
-    check_sprite = arcade.Sprite("images/check.png", SPRITE_SCALING_PLAYER)
-    check_sprite.center_x = 260
-    check_sprite.center_y = 400
-    check_sprite.draw()
-
-
-def x_mark():
-    x_sprite = arcade.Sprite("images/x.png", SPRITE_SCALING_PLAYER)
-    x_sprite.center_x = 260
-    x_sprite.center_y = 400
-    x_sprite.draw()
 
 
 def main():
